@@ -13,13 +13,14 @@ async function getWeather() {
 
   try {
     const response = await fetch(url);
-
-    if (!response.ok) {
-      throw new Error("City not found");
-    }
-
     const data = await response.json();
+
     console.log(data);
+
+    if (data.cod != 200) {
+      alert("City not found");
+      return;
+    }
 
     document.getElementById("cityName").textContent = data.name;
     document.getElementById("temperature").textContent =
@@ -27,21 +28,12 @@ async function getWeather() {
     document.getElementById("description").textContent =
       data.weather[0].description;
 
-      const iconCode = data.weather[0].icon;
-      const iconUrl = `https://openweathermap.org/img/wn/${icon}@2x.png`;
-      
-      document.getElementById("weatherIcon").src = iconUrl;
+    const icon = data.weather[0].icon;
+    const iconUrl = `https://openweathermap.org/img/wn/${icon}@2x.png`;
+    document.getElementById("weatherIcon").src = iconUrl;
 
   } catch (error) {
-    console.error(error);
-    alert("Error fetching weather");
+    console.log(error);
+    alert("Network error");
   }
 }
-
-document
-  .getElementById("cityInput")
-  .addEventListener("keypress", function (e) {
-    if (e.key === "Enter") {
-      getWeather();
-    }
-  });
